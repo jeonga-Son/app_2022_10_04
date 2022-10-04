@@ -1,5 +1,6 @@
 package com.ll.exam.app__2022_10_04;
 
+import com.ll.exam.app__2022_10_04.app.jwt.JwtProvider;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.crypto.SecretKey;
+import java.security.KeyStore;
 import java.util.Base64;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class JwtTests {
 	@Value("${custom.jwt.secretKey}")
 	private String secretKeyPlain;
+	private JwtProvider jwtProvider;
 
 	@Test
 	@DisplayName("secretKey 키가 존재해야한다.")
@@ -27,6 +30,14 @@ class JwtTests {
 	void t2() {
 		String keyBase64Encoded = Base64.getEncoder().encodeToString(secretKeyPlain.getBytes());
 		SecretKey secretKey = Keys.hmacShaKeyFor(keyBase64Encoded.getBytes());
+
+		assertThat(secretKey).isNotNull();
+	}
+
+	@Test
+	@DisplayName("JwtProvider 객체로 시크릿키 객체를 생성할 수 있다.")
+	void t3() {
+		SecretKey secretKey = jwtProvider.getSecretKey();
 
 		assertThat(secretKey).isNotNull();
 	}
